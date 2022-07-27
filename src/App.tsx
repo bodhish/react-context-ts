@@ -1,21 +1,29 @@
-import React, { useState } from "react";
+import { useState, createContext, useContext } from "react";
 import "./App.css";
 
-type UsernameEditorProps = {
+type UserContextType = {
   username: string;
   updateUsername: (username: string) => void;
 };
 
-function User({ username, updateUsername }: UsernameEditorProps) {
+const UserContext = createContext<UserContextType | null>(null);
+
+function User() {
+  const { username } = useContext(UserContext) as UserContextType;
+
   return (
     <div>
       Username: {username}
-      <UsernameEditor username={username} updateUsername={updateUsername} />
+      <UsernameEditor />
     </div>
   );
 }
 
-function UsernameEditor({ username, updateUsername }: UsernameEditorProps) {
+function UsernameEditor() {
+  const { username, updateUsername } = useContext(
+    UserContext
+  ) as UserContextType;
+
   return (
     <div>
       <input
@@ -27,17 +35,26 @@ function UsernameEditor({ username, updateUsername }: UsernameEditorProps) {
   );
 }
 
-function App() {
-  const [username, setUsername] = useState("owais");
-  const [otherUsername, setOtherUsername] = useState("calvin");
+function Root() {
+  const [username, setUsername] = useState<string>("owais");
+  const [otherUsername, setOtherUsername] = useState<string>("calvin");
+
   return (
     <div className="App">
       <header className="App-header">
-        <User username={username} updateUsername={setUsername} />
-        <User username={otherUsername} updateUsername={setOtherUsername} />
+        <UserContext.Provider
+          value={{ username: username, updateUsername: setUsername }}
+        >
+          <User />
+        </UserContext.Provider>
+        <UserContext.Provider
+          value={{ username: otherUsername, updateUsername: setOtherUsername }}
+        >
+          <User />
+        </UserContext.Provider>
       </header>
     </div>
   );
 }
 
-export default App;
+export default Root;
