@@ -1,23 +1,40 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import "./App.css";
+
+type UsernameEditorProps = {
+  username: string;
+  updateUsername: (username: string) => void;
+};
+
+function User({ username, updateUsername }: UsernameEditorProps) {
+  return (
+    <div>
+      Username: {username}
+      <UsernameEditor username={username} updateUsername={updateUsername} />
+    </div>
+  );
+}
+
+function UsernameEditor({ username, updateUsername }: UsernameEditorProps) {
+  return (
+    <div>
+      <input
+        type="text"
+        value={username}
+        onChange={(e) => updateUsername(e.target.value)}
+      />
+    </div>
+  );
+}
 
 function App() {
+  const [username, setUsername] = useState("owais");
+  const [otherUsername, setOtherUsername] = useState("calvin");
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <User username={username} updateUsername={setUsername} />
+        <User username={otherUsername} updateUsername={setOtherUsername} />
       </header>
     </div>
   );
